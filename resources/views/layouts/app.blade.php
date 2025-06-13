@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -14,19 +15,42 @@
     <!-- Scripts & Styles -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
+
 <body class="font-sans antialiased bg-gray-50 text-gray-900">
     <div class="min-h-screen bg-gray-100">
-        
-        <!-- Navbar -->
-        <nav class="p-4 bg-white shadow">
-            <a href="/dashboard" class="mr-4 hover:underline">Dashboard</a>
-            <a href="/scan" class="mr-4 hover:underline">scan</a>
-            <a href="/chat" class="mr-4 hover:underline">Chat</a>
 
-            <form method="POST" action="{{ route('logout') }}" class="inline">
-                @csrf
-                <button type="submit" class="text-red-600 hover:underline">Logout</button>
-            </form>
+               <nav class="flex justify-between items-center px-8 py-4 border-b bg-white shadow-sm">
+            {{-- Logo NutriView --}}
+            <div class="text-2xl font-bold text-green-700">🍏 NutriView</div>
+
+            {{-- Navigation Links (Tengah) --}}
+            <div class="flex flex-grow justify-center space-x-9 text-sm font-medium">
+                {{-- <a href="{{ url('/dashboard') }}" class="text-gray-700 hover:text-green-600">Dashboard</a> --}}
+                <a href="{{ url('/scan') }}" class="text-gray-700 hover:text-green-600">Scan</a>
+                <a href="{{ url('/chat') }}" class="text-gray-700 hover:text-green-600">Chat</a>
+                <a href="{{ url('/chat') }}" class="text-gray-700 hover:text-green-600">History</a>
+            </div>
+
+            <div class="flex items-center space-x-4">
+                @auth
+                    <a href="{{ route('profile.edit') }}" class="flex items-center text-gray-700 hover:text-green-600"> {{-- Tambahkan kelas teks untuk hover --}}
+            
+                        <span class="font-medium hidden md:inline">{{ Auth::user()->name }}</span> {{-- Tampilkan nama di samping avatar --}}
+                    </a>
+
+                    {{-- Tombol Logout --}}
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded font-semibold hover:bg-green-600 transition">
+                            {{ __('Log Out') }}
+                        </button>
+                    </form>
+                @else
+                    {{-- Jika tidak login, tampilkan tombol login/register --}}
+                    <a href="{{ route('login') }}" class="text-gray-700 hover:text-green-600 px-4 py-2 rounded">Log In</a>
+                    <a href="{{ route('register') }}" class="bg-green-500 text-white px-4 py-2 rounded font-semibold hover:bg-green-600 transition">Sign Up</a>
+                @endauth
+            </div>
         </nav>
 
         <!-- Optional header -->
@@ -39,10 +63,11 @@
         @endisset
 
         <!-- Main content -->
-        <<main class="p-6">
-         @yield('content')
+        <main class="p-6">
+            @yield('content')
         </main>
 
     </div>
 </body>
+
 </html>
